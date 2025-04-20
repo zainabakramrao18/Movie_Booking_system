@@ -1,3 +1,47 @@
+# ----- User Login System -----
+
+class User:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+class UserSystem:
+    def __init__(self):
+        self.users = {}
+        self.logged_in_user = None
+
+    def register(self):
+        username = input("Enter a new username: ")
+        if username in self.users:
+            print("Username already exists. Try a different one.")
+            return
+        password = input("Enter a password: ")
+        self.users[username] = User(username, password)
+        print("Registration successful!")
+
+    def login(self):
+        username = input("Username: ")
+        password = input("Password: ")
+        user = self.users.get(username)
+        if user and user.password == password:
+            self.logged_in_user = user
+            print(f"Welcome, {username}!")
+        else:
+            print("Invalid username or password.")
+
+    def logout(self):
+        if self.logged_in_user:
+            print(f"Logged out {self.logged_in_user.username}")
+            self.logged_in_user = None
+        else:
+            print("No user is logged in.")
+
+    def is_logged_in(self):
+        return self.logged_in_user is not None
+
+
+# ----- Booking System -----
+
 class Seat:
     def __init__(self, seat_number):
         self.seat_number = seat_number
@@ -16,7 +60,7 @@ class Seat:
 class Movie:
     def __init__(self, title, duration):
         self.title = title
-        self.duration = duration  # in minutes
+        self.duration = duration
 
     def __str__(self):
         return f"{self.title} ({self.duration} mins)"
@@ -25,7 +69,7 @@ class Movie:
 class Theater:
     def __init__(self, name, seats_count):
         self.name = name
-        self.seats = [Seat(i+1) for i in range(seats_count)]
+        self.seats = [Seat(i + 1) for i in range(seats_count)]
         self.movies = []
 
     def add_movie(self, movie):
@@ -53,36 +97,66 @@ class Theater:
 
 class BookingSystem:
     def __init__(self):
-        self.theater = Theater("CineMax", 10)  # Simple 10-seat theater
+        self.user_system = UserSystem()
+        self.theater = Theater("CineMax", 10)
 
     def setup(self):
-        # Add sample movies
         self.theater.add_movie(Movie("Inception", 148))
         self.theater.add_movie(Movie("The Matrix", 136))
         self.theater.add_movie(Movie("Interstellar", 169))
 
     def start(self):
         self.setup()
-        print("Welcome to the Movie Ticket Booking System\n")
+        print("🎬 Welcome to the Movie Ticket Booking System 🎬\n")
         while True:
-            print("\n1. View Movies\n2. View Available Seats\n3. Book a Seat\n4. Exit")
+            print("\nMenu:")
+            print("1. Register")
+            print("2. Login")
+            print("3. View Movies")
+            print("4. View Available Seats")
+            print("5. Book a Seat")
+            print("6. Logout")
+            print("7. Exit")
+
             choice = input("Enter your choice: ")
 
             if choice == '1':
-                self.theater.display_movies()
+                self.user_system.register()
+
             elif choice == '2':
-                self.theater.show_available_seats()
+                self.user_system.login()
+
             elif choice == '3':
+                if not self.user_system.is_logged_in():
+                    print("Please login first.")
+                    continue
+                self.theater.display_movies()
+
+            elif choice == '4':
+                if not self.user_system.is_logged_in():
+                    print("Please login first.")
+                    continue
+                self.theater.show_available_seats()
+
+            elif choice == '5':
+                if not self.user_system.is_logged_in():
+                    print("Please login first.")
+                    continue
                 try:
                     seat_num = int(input("Enter seat number to book: "))
                     self.theater.book_seat(seat_num)
                 except ValueError:
                     print("Please enter a valid number.")
-            elif choice == '4':
-                print("Thank you for using the booking system!")
+
+            elif choice == '6':
+                self.user_system.logout()
+
+            elif choice == '7':
+                print("Thank you for using the system!")
                 break
+
             else:
-                print("Invalid choice. Please try again.")
+                print("Invalid choice. Try again.")
 
 # Run the system
 if __name__ == "__main__":
