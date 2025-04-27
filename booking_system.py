@@ -54,6 +54,12 @@ class Seat:
             return True
         return False
 
+    def cancel(self):  # Added for canceling a booking
+        if self.is_booked:
+            self.is_booked = False
+            return True
+        return False
+
     def __str__(self):
         return f"{self.seat_number}{' (Booked)' if self.is_booked else ''}"
 
@@ -96,7 +102,23 @@ class Theater:
                 print(f"Seat {seat_number} is already booked.")
         else:
             print("Invalid seat number.")
+    def cancel_seat(self, seat_number, user):  # Added for canceling a seat
+        if 0 < seat_number <= len(self.seats):
+            seat = self.seats[seat_number - 1]
+            if seat.cancel():
+                print(f"Seat {seat_number} booking canceled successfully!")
+                user.booking_history.remove(seat_number)  # Remove from user's booking history
+            else:
+                print(f"Seat {seat_number} is not booked.")
+        else:
+            print("Invalid seat number.")
 
+    def search_movie(self, title):  # Added for searching a movie
+        for movie in self.movies:
+            if title.lower() in movie.title.lower():
+                print(f"Found: {movie}")
+                return
+        print("Movie not found.")
 
 class BookingSystem:
     def __init__(self):
@@ -115,6 +137,9 @@ class BookingSystem:
         print("3. View Movies")
         print("4. View Available Seats")
         print("5. Book a Seat")
+        print("6. Cancel a Booking")  # Added
+        print("7. Search for a Movie")  # Added
+        print("8. Admin Panel") #Added
         print("6. Logout")
         print("7. Exit")
 
@@ -143,11 +168,22 @@ class BookingSystem:
             elif choice == '5':
                 if self.check_login():
                     self.handle_seat_booking()
+            
+            elif choice == '6':  # Added
+                if self.check_login():
+                    self.handle_seat_cancellation()
 
-            elif choice == '6':
+            elif choice == '7':  # Added
+                if self.check_login():
+                    self.search_movie()
+
+            elif choice == '8':  # Added
+                self.admin_panel()
+
+            elif choice == '9':
                 self.user_system.logout()
 
-            elif choice == '7':
+            elif choice == '10':
                 print("Thank you for using the system! Goodbye! 👋")
                 break
 
@@ -166,7 +202,29 @@ class BookingSystem:
             self.theater.book_seat(seat_num)
         except ValueError:
             print("Please enter a valid number.")
+    def search_movie(self):  # Added
+        title = input("Enter movie title to search: ")
+        self.theater.search_movie(title)
 
+    def admin_panel(self):  # Added
+        admin_password = "admin123"  # Example password
+        password = input("Enter admin password: ")
+        if password == admin_password:
+            print("\nAdmin Menu:")
+            print("1. Add Movie")
+            print("2. Exit Admin Panel")
+            choice = input("Enter your choice: ")
+            if choice == '1':
+                title = input("Enter movie title: ")
+                duration = int(input("Enter movie duration (in minutes): "))
+                self.theater.add_movie(Movie(title, duration))
+                print(f"Movie '{title}' added successfully!")
+            elif choice == '2':
+                print("Exiting admin panel.")
+            else:
+                print("Invalid choice.")
+        else:
+            print("Incorrect password.")
 
 # ----- Run the system -----
 
