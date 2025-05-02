@@ -1,9 +1,10 @@
 # ----- User Login System -----
-
 class User:
     def __init__(self, username, password):
         self.username = username
         self.password = password
+        self.booking_history = []  # New: Stores instances of Booking
+        
 
 
 class UserSystem:
@@ -199,9 +200,26 @@ class BookingSystem:
     def handle_seat_booking(self):
         try:
             seat_num = int(input("Enter seat number to book: "))
-            self.theater.book_seat(seat_num)
+            movie_title = input("Enter movie title for the booking: ")
+            if self.theater.book_seat(seat_num):
+                booking = booking(
+                    user=self.user_system.logged_in_user,
+                    seat_number=seat_num,
+                    movie_title=movie_title
+            )
+                self.user_system.logged_in_user.booking_history.append(booking)
         except ValueError:
             print("Please enter a valid number.")
+    def view_booking_history(self):
+        user = self.user_system.logged_in_user
+        if user.booking_history:
+            print("\nYour Booking History:")
+            for booking in user.booking_history:
+                print(booking)
+        else:
+            print("You have no bookings.")
+        
+
     def search_movie(self):  # Added
         title = input("Enter movie title to search: ")
         self.theater.search_movie(title)
