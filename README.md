@@ -1,4 +1,4 @@
-# 🎬 Movie Ticket Booking System (OOP in Python)
+🎬 Movie Ticket Booking System (OOP in Python)
 
 This is a simple **console-based movie ticket booking system** built using **Object-Oriented Programming (OOP)** concepts in Python.  
 It simulates a basic theater system where users can:
@@ -11,7 +11,7 @@ It simulates a basic theater system where users can:
 
 ---
 
-## 🛠️ Features
+ 🛠️ Features
 
 - 👤 **User System**: Registration, Login, Logout
 - 🎞️ **Movies**: Add and list currently playing movies
@@ -22,7 +22,7 @@ It simulates a basic theater system where users can:
 
 ---
 
-## 🧠 OOP Concepts Used
+ 🧠 OOP Concepts Used
 
 - **Classes & Objects**: `User`, `UserSystem`, `Movie`, `Seat`, `Theater`, `BookingSystem`
 - **Encapsulation**: Data and behaviors grouped inside classes
@@ -30,8 +30,7 @@ It simulates a basic theater system where users can:
 - **Modularity**: Each feature is separated cleanly across classes
 
 ---
-
-## 🚀 Getting Started
+ 🚀 Getting Started
 
 1. Clone the repository or download the source code.
 2. Navigate to the project folder.
